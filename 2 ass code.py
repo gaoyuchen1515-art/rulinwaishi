@@ -47,28 +47,73 @@ for bar in bars:
             f'{int(height)}', ha='center', va='bottom', fontsize=11)
 st.pyplot(fig)
 
-# 4. Interactive GIS Map
-st.subheader("🗺️ GIS Map of Locations & Activities")
-m = folium.Map(location=[31.5, 120.5], zoom_start=8, tiles="CartoDB positron")
+import matplotlib.pyplot as plt
+import pandas as pd
+from matplotlib.patches import Circle
+import numpy as np
 
-# Add markers for each location
-for _, row in df.iterrows():
-    popup_html = f"""
-    <strong>{row['Chinese_Name']} ({row['Location']})</strong><br>
-    Frequency: {row['Frequency']}<br>
-    Activities: {row['Key_Activities']}
-    """
-    folium.CircleMarker(
-        location=[row['Latitude'], row['Longitude']],
-        radius=row['Frequency'] * 2,  # Radius proportional to frequency
-        color='#FF6B6B' if row['Frequency'] >= 6 else '#4ECDC4' if row['Frequency'] >= 4 else '#96CEB4',
-        fill=True,
-        fill_color='#FF6B6B' if row['Frequency'] >= 6 else '#4ECDC4' if row['Frequency'] >= 4 else '#96CEB4',
-        popup=folium.Popup(popup_html, max_width=300)
-    ).add_to(m)
+# 数据准备
+data = {
+    "Location": ["Hangzhou", "Yangzhou", "Nanjing", "Suzhou", "Huzhou"],
+    "Frequency": [8, 6, 5, 4, 3],
+    "Chinese_Name": ["杭州", "揚州", "南京", "蘇州", "湖州"],
+    "Latitude": [30.2593, 32.3934, 32.0472, 31.2993, 30.8667],
+    "Longitude": [120.1455, 119.4007, 118.7969, 120.6195, 119.9167],
+    "Key_Activities": [
+        "Ma Chunshang visits West Lake; Kuang Chaoren edits exam papers; poet gatherings",
+        "Hu Sandi's poetry events; Niu Buyi's transit; scholar interactions",
+        "Niu Puluo's residence; literary exchanges; official transits",
+        "Dong Ying's passage; calligraphy/painting exchanges; academic discussions",
+        "Lou Brothers' scholar gatherings; Lu Bianxiu's family affairs; Yingtou Lake events"
+    ]
+}
+df = pd.DataFrame(data)
 
-# 优化：移除width和height参数，使用Streamlit默认布局适配
-streamlit_folium(m)
+# 创建画布
+fig, ax = plt.subplots(figsize=(10, 8))
+
+# 绘制地图背景（这里简化为空白，实际可叠加地图底图）
+ax.set_xlim(118, 121)
+ax.set_ylim(30, 33)
+ax.set_xlabel("Longitude")
+ax.set_ylabel("Latitude")
+ax.set_title("The Scholars: Location Frequency (Ch.10-20)")
+
+# 定义颜色和大小映射
+colors = {8: 'red', 6: 'orange', 5: 'blue', 4: 'green', 3: 'purple'}
+sizes = df['Frequency'] * 20
+
+# 绘制散点
+scatter = ax.scatter(
+    df['Longitude'], 
+    df['Latitude'], 
+    s=sizes, 
+    c=[colors[val] for val in df['Frequency']],
+    alpha=0.7
+)
+
+# 添加标签和图例
+for i, txt in enumerate(df['Chinese_Name']):
+    ax.text(df['Longitude'][i] + 0.05, df['Latitude'][i] + 0.05, txt, fontsize=10)
+
+# 自定义图例（频率与颜色、大小的对应）
+legend_elements = [
+    Circle((0, 0), radius=8, color='red', label='Frequency: 8'),
+    Circle((0, 0), radius=6, color='orange', label='Frequency: 6'),
+    Circle((0, 0), radius=5, color='blue', label='Frequency: 5'),
+    Circle((0, 0), radius=4, color='green', label='Frequency: 4'),
+    Circle((0, 0), radius=3, color='purple', label='Frequency: 3')
+]
+ax.legend(handles=legend_elements, title="Frequency Legend", loc='upper right')
+
+# 显示图形
+plt.grid(True, linestyle='--', alpha=0.5)
+plt.tight_layout()
+plt.show()
+
+# 在Streamlit中展示（若需要）
+# import streamlit as st
+# st.pyplot(fig)
 
 # 5. Detailed Activity Comparison
 st.subheader("📋 Key Activities by Location")
