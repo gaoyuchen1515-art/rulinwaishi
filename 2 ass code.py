@@ -49,14 +49,11 @@ st.pyplot(fig)
 
 import matplotlib.pyplot as plt
 import pandas as pd
-from matplotlib.patches import Circle
-import numpy as np
 
-# 数据准备
+# 数据准备（地点名称改为英文）
 data = {
     "Location": ["Hangzhou", "Yangzhou", "Nanjing", "Suzhou", "Huzhou"],
     "Frequency": [8, 6, 5, 4, 3],
-    "Chinese_Name": ["杭州", "揚州", "南京", "蘇州", "湖州"],
     "Latitude": [30.2593, 32.3934, 32.0472, 31.2993, 30.8667],
     "Longitude": [120.1455, 119.4007, 118.7969, 120.6195, 119.9167],
     "Key_Activities": [
@@ -70,50 +67,22 @@ data = {
 df = pd.DataFrame(data)
 
 # 创建画布
-fig, ax = plt.subplots(figsize=(10, 8))
+fig, ax = plt.subplots(figsize=(10, 6))
 
-# 绘制地图背景（这里简化为空白，实际可叠加地图底图）
-ax.set_xlim(118, 121)
-ax.set_ylim(30, 33)
-ax.set_xlabel("Longitude")
-ax.set_ylabel("Latitude")
-ax.set_title("The Scholars: Location Frequency (Ch.10-20)")
+# 绘制柱状图
+bars = ax.bar(df["Location"], df["Frequency"], color=['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57'])
+ax.set_xlabel("Location", fontsize=12)
+ax.set_ylabel("Frequency", fontsize=12)
+ax.set_title("Location Frequency in Chapters 10-20", fontsize=14, fontweight='bold')
 
-# 定义颜色和大小映射
-colors = {8: 'red', 6: 'orange', 5: 'blue', 4: 'green', 3: 'purple'}
-sizes = df['Frequency'] * 20
+# 添加数值标签
+for bar in bars:
+    height = bar.get_height()
+    ax.text(bar.get_x() + bar.get_width()/2., height + 0.1,
+            f'{int(height)}', ha='center', va='bottom', fontsize=11)
 
-# 绘制散点
-scatter = ax.scatter(
-    df['Longitude'], 
-    df['Latitude'], 
-    s=sizes, 
-    c=[colors[val] for val in df['Frequency']],
-    alpha=0.7
-)
-
-# 添加标签和图例
-for i, txt in enumerate(df['Chinese_Name']):
-    ax.text(df['Longitude'][i] + 0.05, df['Latitude'][i] + 0.05, txt, fontsize=10)
-
-# 自定义图例（频率与颜色、大小的对应）
-legend_elements = [
-    Circle((0, 0), radius=8, color='red', label='Frequency: 8'),
-    Circle((0, 0), radius=6, color='orange', label='Frequency: 6'),
-    Circle((0, 0), radius=5, color='blue', label='Frequency: 5'),
-    Circle((0, 0), radius=4, color='green', label='Frequency: 4'),
-    Circle((0, 0), radius=3, color='purple', label='Frequency: 3')
-]
-ax.legend(handles=legend_elements, title="Frequency Legend", loc='upper right')
-
-# 显示图形
-plt.grid(True, linestyle='--', alpha=0.5)
 plt.tight_layout()
 plt.show()
-
-# 在Streamlit中展示（若需要）
-# import streamlit as st
-# st.pyplot(fig)
 
 # 5. Detailed Activity Comparison
 st.subheader("📋 Key Activities by Location")
