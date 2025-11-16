@@ -67,8 +67,8 @@ for _, row in df.iterrows():
         popup=folium.Popup(popup_html, max_width=300)
     ).add_to(m)
 
-# Display map
-st_folium(m, width=1200, height=600)
+# 优化：移除width和height参数，使用Streamlit默认布局适配
+st_folium(m)
 
 # 5. Detailed Activity Comparison
 st.subheader("📋 Key Activities by Location")
