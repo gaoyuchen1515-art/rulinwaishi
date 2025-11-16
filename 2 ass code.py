@@ -68,7 +68,7 @@ for _, row in df.iterrows():
     ).add_to(m)
 
 # 优化：移除width和height参数，使用Streamlit默认布局适配
-streamlit_folium(m)
+streamlit-folium(m)
 
 # 5. Detailed Activity Comparison
 st.subheader("📋 Key Activities by Location")
