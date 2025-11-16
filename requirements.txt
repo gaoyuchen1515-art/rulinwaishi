@@ -2,3 +2,4 @@ streamlit
 folium
 pandas
 matplotlib
+streamlit_folium
