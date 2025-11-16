@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import folium
-from streamlit_folium import st_folium
+import streamlit_folium
 
 # Set page config
 st.set_page_config(page_title="The Scholars: Location Analysis (Ch.10-20)", layout="wide")
