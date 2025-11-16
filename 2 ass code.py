@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import folium
-import streamlit-folium
+import streamlit_folium
 
 # Set page config
 st.set_page_config(page_title="The Scholars: Location Analysis (Ch.10-20)", layout="wide")
@@ -68,7 +68,7 @@ for _, row in df.iterrows():
     ).add_to(m)
 
 # 优化：移除width和height参数，使用Streamlit默认布局适配
-streamlit-folium(m)
+streamlit_folium(m)
 
 # 5. Detailed Activity Comparison
 st.subheader("📋 Key Activities by Location")
